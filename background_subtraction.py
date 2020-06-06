@@ -1,5 +1,6 @@
-import numpy as np
 import cv2
+import numpy as np
+import psycopg2
 import simpleaudio
 
 drip = simpleaudio.WaveObject.from_wave_file("drip.wav")
@@ -8,6 +9,11 @@ frames_to_track = 200
 non_zeros = [0 for x in range(frames_to_track)]
 frame_num = 0
 hit_most_of_high_water_mark = False
+jug_id = 1
+
+conn = psycopg2.connect('')
+conn.autocommit=True
+cursor = conn.cursor()
 
 
 def high_water(values):
@@ -37,6 +43,7 @@ while(1):
             hit_most_of_high_water_mark = True
             bubble_text = ' BUBBLE!!!!! '
             drip.play()
+            cursor.execute("INSERT INTO bubble (jug_id) VALUES (%s)", (jug_id,))
     else:
         if non_zeros[index] == 0:
             hit_most_of_high_water_mark = False
