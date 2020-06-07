@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+<script>
+{% block jquery %}
+var endpoint = '/bubble/api/get_data'
+var defaultData = []
+var labels = [];
+$.ajax({
+    method: "GET",
+    url: endpoint,
+    success: function(data){
+        defaultData = data;
+//         defaultData = [{
+//     x: 10,
+//     y: 20
+// }, {
+//     x: 15,
+//     y: 10
+// }];
+        console.log(defaultData);
+        setChart()
+    },
+    error: function(error_data){
+        console.log("error")
+        console.log(error_data)
+    }
+})
+
+function setChart(){
+    var ctx2 = document.getElementById("myChart2");
+    var myChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            // labels: labels,
+            datasets: [{
+                label: 'Bubbles per minute',
+                data: defaultData,
+            }]
+        },
+        options: {
+            scales: {
+              xAxes: [{
+                  type: 'time',
+              }]
+            }
+        }
+    });
+
+}
+
+
+{% endblock %}
+</script>
+
+{% block content %}
+
+<div class='row'>
+    <div class='col-sm-12' url-endpoint='{% url "get_data" %}'>
+        <h1>Hello World</h1>
+        <div class='col-sm-6'>
+            <canvas id="myChart2" width="400" height="400"></canvas>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock content %}
